@@ -8,13 +8,29 @@
 import SwiftUI
 
 struct AdressView: View {
-    var order: Order
+    @Binding var order: Order
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            Section {
+                TextField("Имя", text: $order.name)
+                TextField("Адрес", text: $order.streetAddress)
+                TextField("Город", text: $order.city)
+                TextField("Индекс", text: $order.zip)
+            }
+            
+            Section {
+                NavigationLink("Оформить заказ") {
+                    CheckoutView(order: order)
+                }
+            }
+            .disabled(order.hasValidAddress == false)
+        }
+        .navigationTitle("Детали доставки")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    AdressView(order: Order())
+    AdressView(order: .constant(Order()))
 }
