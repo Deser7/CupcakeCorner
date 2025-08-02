@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-// MARK: - Response Structure
-struct OrderResponse: Codable {
-    let type: Int
-    let quantity: Int
-}
-
 struct CheckoutView: View {
     let order: Order
     let networkService = NetworkServices.shared
@@ -34,13 +28,22 @@ struct CheckoutView: View {
                 }
                 .frame(height: 233)
                 
-                Text("Итоговая стоимость заказа \(order.cost, format: .currency(code: networkService.currencyCode))")
+                Text("Стоимость заказа \(order.cost, format: .currency(code: networkService.currencyCode))")
                     .font(.title)
                     .multilineTextAlignment(.center)
+                    .padding()
                 
                 Button("Оформить заказ") {
                     Task {
-                        await placeOrder()
+                        let result = await networkService.placeOrder(with: order)
+                        switch result {
+                        case .success(let message):
+                            confirmationMessage = message
+                            showConfirmation = true
+                        case .failure(let error):
+                            errorMessage = "Ошибка \(error.localizedDescription)"
+                            showError = true
+                        }
                     }
                 }
                 .padding()
@@ -58,30 +61,6 @@ struct CheckoutView: View {
             Button("OK") {}
         } message: {
             Text(errorMessage)
-        }
-    }
-    
-    // MARK: - Network Functions
-    func placeOrder() async {
-        guard let encoder = try? JSONEncoder().encode(order) else {
-            errorMessage = "Ошибка кодирования заказа"
-            showError = true
-            return
-        }
-        
-        var request = URLRequest(url: networkService.requestURL)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        
-        do {
-            let (data, _) = try await URLSession.shared.upload(for: request, from: encoder)
-            
-            let decodedOrder = try JSONDecoder().decode(OrderResponse.self, from: data)
-            confirmationMessage = "Ваш заказ для \(decodedOrder.quantity)x\(Order.types[decodedOrder.type].lowercased()) кексы уже в пути!"
-            showConfirmation = true
-        } catch {
-            errorMessage = "Ошибка: \(error.localizedDescription)"
-            showError = true
         }
     }
 }
