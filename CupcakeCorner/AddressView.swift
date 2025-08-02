@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AdressView: View {
+struct AddressView: View {
     @Binding var order: Order
     
     var body: some View {
@@ -24,7 +24,6 @@ struct AdressView: View {
                     CheckoutView(order: order)
                 }
             }
-            .disabled(order.hasValidAddress == false)
         }
         .navigationTitle("Детали доставки")
         .navigationBarTitleDisplayMode(.inline)
@@ -32,5 +31,5 @@ struct AdressView: View {
 }
 
 #Preview {
-    AdressView(order: .constant(Order()))
+    AddressView(order: .constant(Order()))
 }

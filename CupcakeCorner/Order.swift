@@ -8,18 +8,16 @@
 import Foundation
 
 @Observable
-final class Order {
-    static let types = ["Ванильный", "Клубничный", "Шоколадный", "Радужный"]
+final class Order: Encodable {
     
-    let url = URL(string: "https://hws.dev/img/cupcakes@3x.jpg")
-    let currencyCode = Locale.current.currency?.identifier ?? "RUB"
+    static let types = ["Ванильный", "Клубничный", "Шоколадный", "Радужный"]
     
     var type = 0
     var quantity = 3
     
-    var specialRequesEnabled = false {
+    var specialRequestEnabled = false {
         didSet {
-            if specialRequesEnabled == false {
+            if specialRequestEnabled == false {
                 extraFrosting = false
                 addSprinkles = false
             }
