@@ -9,17 +9,6 @@ import Foundation
 
 @Observable
 final class Order: Encodable {
-    enum CodingKeys: String, CodingKey {
-        case _type = "type"
-        case _quantity = "quantity"
-        case _specialRequestEnabled = "specialRequestEnabled"
-        case _extraFrosting = "extraFrosting"
-        case _addSprinkles = "addSprinkles"
-        case _name = "name"
-        case _city = "city"
-        case _streetAddress = "streetAddress"
-        case _zip = "zip"
-    }
     
     static let types = [
         "Ванильный",
@@ -48,11 +37,7 @@ final class Order: Encodable {
     var zip = ""
     
     var hasValidAddress: Bool {
-        if name.isEmpty || streetAddress.isEmpty || city.isEmpty || zip.isEmpty {
-            return false
-        }
-        
-        return true
+        [name, streetAddress, city, zip].allSatisfy { hasRealContent($0) }
     }
     
     var cost: Decimal {
@@ -69,5 +54,10 @@ final class Order: Encodable {
         }
         
         return cost * 100
+    }
+    
+    private func hasRealContent(_ string: String) -> Bool {
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !trimmed.isEmpty
     }
 }
