@@ -9,7 +9,10 @@ import Foundation
 
 @Observable
 final class Order {
-    static let types = ["Vanilla", "Strawberry", "Chokolate", "Rainbow"]
+    static let types = ["Ванильный", "Клубничный", "Шоколадный", "Радужный"]
+    
+    let url = URL(string: "https://hws.dev/img/cupcakes@3x.jpg")
+    let currencyCode = Locale.current.currency?.identifier ?? "RUB"
     
     var type = 0
     var quantity = 3
@@ -36,5 +39,21 @@ final class Order {
         }
         
         return true
+    }
+    
+    var cost: Decimal {
+        var cost = Decimal(quantity * 2)
+        
+        cost += Decimal(type) / 2
+        
+        if extraFrosting {
+            cost += Decimal(quantity)
+        }
+        
+        if addSprinkles {
+            cost += Decimal(quantity) / 2
+        }
+        
+        return cost * 100
     }
 }

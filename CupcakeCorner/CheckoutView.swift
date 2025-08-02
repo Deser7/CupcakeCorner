@@ -11,7 +11,28 @@ struct CheckoutView: View {
     var order: Order
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack {
+                AsyncImage(url: order.url, scale: 3) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(height: 233)
+                
+                Text("Итоговая стоимость заказа \(order.cost, format: .currency(code: order.currencyCode))")
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+                
+                Button("Оформить заказ", action: {})
+                    .padding()
+            }
+        }
+        .navigationTitle("Итог")
+        .navigationBarTitleDisplayMode(.inline)
+        .scrollBounceBehavior(.basedOnSize)
     }
 }
 
