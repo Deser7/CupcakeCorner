@@ -31,10 +31,26 @@ final class Order: Encodable {
     var extraFrosting = false
     var addSprinkles = false
     
-    var name = ""
-    var streetAddress = ""
-    var city = ""
-    var zip = ""
+    var name = "" {
+        didSet {
+            UserDefaults.standard.set(name, forKey: "deliveryName")
+        }
+    }
+    var streetAddress = "" {
+        didSet {
+            UserDefaults.standard.set(streetAddress, forKey: "deliveryStreet")
+        }
+    }
+    var city = "" {
+        didSet {
+            UserDefaults.standard.set(city, forKey: "deliveryCity")
+        }
+    }
+    var zip = "" {
+        didSet {
+            UserDefaults.standard.set(zip, forKey: "deliveryZip")
+        }
+    }
     
     var hasValidAddress: Bool {
         [name, streetAddress, city, zip].allSatisfy { hasRealContent($0) }
@@ -59,5 +75,12 @@ final class Order: Encodable {
     private func hasRealContent(_ string: String) -> Bool {
         let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
         return !trimmed.isEmpty
+    }
+    
+    func loadSavedAddress() {
+        name = UserDefaults.standard.string(forKey: "deliveryName") ?? ""
+        streetAddress = UserDefaults.standard.string(forKey: "deliveryStreet") ?? ""
+        city = UserDefaults.standard.string(forKey: "deliveryCity") ?? ""
+        zip = UserDefaults.standard.string(forKey: "deliveryZip") ?? ""
     }
 }

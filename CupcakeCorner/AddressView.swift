@@ -28,6 +28,9 @@ struct AddressView: View {
         }
         .navigationTitle("Детали доставки")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            order.loadSavedAddress()
+        }
     }
 }
 
