@@ -52,7 +52,7 @@ final class Order: Encodable {
         }
     }
     
-    var hasValidAddress: Bool {
+    var isValidAddress: Bool {
         [name, streetAddress, city, zip].allSatisfy { hasRealContent($0) }
     }
     

@@ -24,7 +24,7 @@ struct AddressView: View {
                     CheckoutView(order: order)
                 }
             }
-            .disabled(order.hasValidAddress == false)
+            .disabled(order.isValidAddress == false)
         }
         .navigationTitle("Детали доставки")
         .navigationBarTitleDisplayMode(.inline)
